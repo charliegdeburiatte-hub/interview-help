@@ -1,0 +1,79 @@
+{
+  "name": "interview-help",
+  "version": "1.0.0",
+  "description": "Personal interview preparation and analysis tool",
+  "main": "./out/main/index.mjs",
+  "scripts": {
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "preview": "electron-vite preview",
+    "postinstall": "electron-rebuild",
+    "dist": "electron-vite build && electron-builder --win",
+    "dist:portable": "electron-vite build && electron-builder --win portable"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "build": {
+    "appId": "com.interview-help.app",
+    "productName": "Interview Help",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "out/**/*",
+      "!node_modules/**/*",
+      "node_modules/better-sqlite3/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "whisper",
+        "to": "whisper",
+        "filter": [
+          "**/*",
+          "!*.js"
+        ]
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": null
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Interview Help"
+    },
+    "portable": {
+      "artifactName": "InterviewHelp-Portable-${version}.exe"
+    }
+  },
+  "dependencies": {
+    "better-sqlite3": "^12.8.0",
+    "electron-vite": "^5.0.0",
+    "geist": "^1.7.0",
+    "lucide-react": "^1.7.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
+  },
+  "devDependencies": {
+    "@electron-toolkit/preload": "^3.0.2",
+    "@electron-toolkit/utils": "^4.0.0",
+    "@tailwindcss/vite": "^4.2.2",
+    "@vitejs/plugin-react": "^6.0.1",
+    "autoprefixer": "^10.4.27",
+    "electron": "^41.1.1",
+    "electron-builder": "^26.8.1",
+    "electron-rebuild": "^3.2.9",
+    "postcss": "^8.5.8",
+    "tailwindcss": "^4.2.2",
+    "vite": "^8.0.3"
+  }
+}

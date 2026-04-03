@@ -1,0 +1,25 @@
+node_modules/
+out/
+release/
+dist/
+
+# Whisper binaries and models (too large for git — user downloads separately)
+whisper/whisper-cli*
+whisper/models/
+whisper/bin/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Environment
+.env
+.env.local
+
+# Logs
+*.log
+npm-debug.log*
