@@ -1,11 +1,70 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, Menu, shell, dialog } from 'electron'
 import { join } from 'path'
+import { existsSync, writeFileSync } from 'fs'
 import { is } from '@electron-toolkit/utils'
 import electronUpdater from 'electron-updater'
 import { getDatabase, closeDatabase } from './db/database.js'
 import { registerAllIpcHandlers } from './ipc/register-ipc.js'
 
 const { autoUpdater } = electronUpdater
+
+function getSetupGuidePath() {
+  return is.dev
+    ? join(app.getAppPath(), 'SETUP-GUIDE.md')
+    : join(process.resourcesPath, 'SETUP-GUIDE.md')
+}
+
+function openSetupGuide() {
+  const guidePath = getSetupGuidePath()
+  if (existsSync(guidePath)) {
+    shell.openPath(guidePath)
+  } else {
+    dialog.showErrorBox('Setup Guide not found', `Expected at: ${guidePath}`)
+  }
+}
+
+function buildMenu() {
+  const template = [
+    ...(process.platform === 'darwin' ? [{ role: 'appMenu' }] : []),
+    { role: 'fileMenu' },
+    { role: 'editMenu' },
+    { role: 'viewMenu' },
+    {
+      role: 'help',
+      submenu: [
+        { label: 'View Setup Guide', click: openSetupGuide },
+        { type: 'separator' },
+        {
+          label: 'Check for Updates',
+          click: () => {
+            autoUpdater.checkForUpdatesAndNotify().catch((err) => {
+              dialog.showErrorBox('Update check failed', String(err))
+            })
+          }
+        }
+      ]
+    }
+  ]
+  Menu.setApplicationMenu(Menu.buildFromTemplate(template))
+}
+
+function maybeShowFirstRunGuide() {
+  const flagPath = join(app.getPath('userData'), '.setup-guide-shown')
+  if (existsSync(flagPath)) return
+  writeFileSync(flagPath, new Date().toISOString())
+
+  const choice = dialog.showMessageBoxSync({
+    type: 'info',
+    title: 'Welcome to Interview Help',
+    message: 'First-time setup required',
+    detail:
+      'Interview Help needs Ollama (and a pulled model) running before it will work. Open the setup guide now?',
+    buttons: ['Open Setup Guide', 'Later'],
+    defaultId: 0,
+    cancelId: 1
+  })
+  if (choice === 0) openSetupGuide()
+}
 
 const APP_WIDTH = 1280
 const APP_HEIGHT = 800
@@ -42,7 +101,9 @@ function createWindow() {
 app.whenReady().then(() => {
   getDatabase()
   registerAllIpcHandlers()
+  buildMenu()
   createWindow()
+  maybeShowFirstRunGuide()
 
   if (!is.dev) {
     autoUpdater.checkForUpdatesAndNotify().catch((err) => {

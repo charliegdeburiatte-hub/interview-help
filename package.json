@@ -1,6 +1,6 @@
 {
   "name": "interview-help",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Personal interview preparation and analysis tool",
   "main": "./out/main/index.mjs",
   "scripts": {
