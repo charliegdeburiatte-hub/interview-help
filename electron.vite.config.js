@@ -5,10 +5,11 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   main: {
-    plugins: [externalizeDepsPlugin()],
+    plugins: [externalizeDepsPlugin({ exclude: [] })],
     build: {
       outDir: 'out/main',
       rollupOptions: {
+        external: ['electron', 'electron-updater', '@electron-toolkit/utils', 'better-sqlite3'],
         input: {
           index: resolve(__dirname, 'src/main/index.js')
         }
