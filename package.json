@@ -33,13 +33,19 @@
           "**/*",
           "!*.js"
         ]
+      },
+      {
+        "from": "SETUP-GUIDE.md",
+        "to": "SETUP-GUIDE.md"
       }
     ],
     "win": {
       "target": [
         {
           "target": "nsis",
-          "arch": ["x64"]
+          "arch": [
+            "x64"
+          ]
         }
       ],
       "icon": null
@@ -53,10 +59,18 @@
     },
     "portable": {
       "artifactName": "InterviewHelp-Portable-${version}.exe"
-    }
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "charliegdeburiatte-hub",
+        "repo": "interview-help"
+      }
+    ]
   },
   "dependencies": {
     "better-sqlite3": "^12.8.0",
+    "electron-updater": "^6.8.3",
     "electron-vite": "^5.0.0",
     "geist": "^1.7.0",
     "lucide-react": "^1.7.0",

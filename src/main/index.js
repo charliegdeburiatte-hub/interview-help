@@ -1,8 +1,11 @@
 import { app, BrowserWindow } from 'electron'
 import { join } from 'path'
 import { is } from '@electron-toolkit/utils'
+import electronUpdater from 'electron-updater'
 import { getDatabase, closeDatabase } from './db/database.js'
 import { registerAllIpcHandlers } from './ipc/register-ipc.js'
+
+const { autoUpdater } = electronUpdater
 
 const APP_WIDTH = 1280
 const APP_HEIGHT = 800
@@ -40,6 +43,12 @@ app.whenReady().then(() => {
   getDatabase()
   registerAllIpcHandlers()
   createWindow()
+
+  if (!is.dev) {
+    autoUpdater.checkForUpdatesAndNotify().catch((err) => {
+      console.error('Auto-update check failed:', err)
+    })
+  }
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
