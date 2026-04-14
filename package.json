@@ -1,6 +1,6 @@
 {
   "name": "interview-help",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Personal interview preparation and analysis tool",
   "main": "./out/main/index.mjs",
   "scripts": {
@@ -22,7 +22,9 @@
     },
     "files": [
       "out/**/*",
-      "!node_modules/**/*",
+      "package.json"
+    ],
+    "asarUnpack": [
       "node_modules/better-sqlite3/**/*"
     ],
     "extraResources": [
